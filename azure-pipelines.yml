@@ -2,7 +2,7 @@ trigger:
 - '*'
 
 pool:
-  vmImage: ubuntu-latest
+  name: AgentesNata
 
 variables:
   buildConfiguration: 'Release'
@@ -14,6 +14,11 @@ steps:
     packageType: sdk
     version: '6.x'
 
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
+
 - task: Npm@1
   displayName: 'Run npm install'
   inputs:
@@ -23,7 +28,9 @@ steps:
   displayName: 'Compile Sass assets'
 
 - task: gulp@1
-  displayName: 'Run gulp tasks'
+  inputs:
+    gulpFile: 'gulpfile.js'
+    gulpjs: 'node_modules/gulp/bin/gulp.js'
 
 - script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
   displayName: 'Write build info'
